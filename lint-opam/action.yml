@@ -2,7 +2,7 @@ name: Lint opam
 description: >-
   Lint opam files with "opam lint" and check consistency between opam
   and Dune metadata with opam-dune-lint.
-author: Sora Morimoto
+author: step-security
 branding:
   icon: package
   color: orange

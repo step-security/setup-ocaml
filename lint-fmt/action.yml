@@ -4,7 +4,7 @@ description: >-
   OCamlFormat version from the .ocamlformat file, installs it, and
   runs "dune build @fmt" to verify that all source files are
   correctly formatted.
-author: Sora Morimoto
+author: step-security
 branding:
   icon: package
   color: orange

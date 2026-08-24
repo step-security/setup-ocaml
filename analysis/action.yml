@@ -4,7 +4,7 @@ description: >-
   Submission API. Runs "opam tree" for every local .opam package and
   converts the result into a dependency snapshot so that the
   repository's Dependency Graph stays up to date.
-author: Sora Morimoto
+author: step-security
 branding:
   icon: package
   color: orange

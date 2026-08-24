@@ -3,7 +3,7 @@ description: >-
   Check OCaml documentation comments by building with Odoc. Runs
   "dune build @doc" with ODOC_WARN_ERROR=true so that any Odoc
   warning is treated as an error.
-author: Sora Morimoto
+author: step-security
 branding:
   icon: package
   color: orange

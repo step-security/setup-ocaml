@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
 
-permissions: read
+permissions: read-all
 
 jobs:
   hygiene:
