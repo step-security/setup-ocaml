@@ -33,10 +33,10 @@ jobs:
 
     steps:
       - name: Checkout tree
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set-up OCaml
-        uses: ocaml/setup-ocaml@v3
+        uses: step-security/setup-ocaml@v3
         with:
           ocaml-compiler: 5
 
@@ -47,16 +47,16 @@ jobs:
         run: opam exec -- dune build @doc
 
       - name: Set-up Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _build/default/_doc/_html
 
       - id: deployment
         name: Deploy odoc to GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 ```
 
 ## Using glob patterns to filter local packages
@@ -66,10 +66,10 @@ Consult the [`@actions/glob`](https://github.com/actions/toolkit/tree/main/packa
 ```yml
 steps:
   - name: Checkout tree
-    uses: actions/checkout@v6
+    uses: actions/checkout@v7
 
   - name: Set-up OCaml
-    uses: ocaml/setup-ocaml@v3
+    uses: step-security/setup-ocaml@v3
     with:
       ocaml-compiler: ${{ matrix.ocaml-compiler }}
       opam-local-packages: |
@@ -84,10 +84,10 @@ runs-on: windows-latest
 
 steps:
   - name: Checkout tree
-    uses: actions/checkout@v6
+    uses: actions/checkout@v7
 
   - name: Set-up OCaml with MSVC
-    uses: ocaml/setup-ocaml@v3
+    uses: step-security/setup-ocaml@v3
     with:
       ocaml-compiler: "5.4"
       windows-compiler: msvc
@@ -100,10 +100,10 @@ runs-on: windows-latest
 
 steps:
   - name: Checkout tree
-    uses: actions/checkout@v6
+    uses: actions/checkout@v7
 
   - name: Set-up OCaml with MSYS2
-    uses: ocaml/setup-ocaml@v3
+    uses: step-security/setup-ocaml@v3
     with:
       ocaml-compiler: "5.4"
       windows-environment: msys2
@@ -116,10 +116,10 @@ To use a custom or unreleased OCaml compiler, create a custom [opam repository](
 ```yml
 steps:
   - name: Checkout tree
-    uses: actions/checkout@v6
+    uses: actions/checkout@v7
 
   - name: Set-up OCaml
-    uses: ocaml/setup-ocaml@v3
+    uses: step-security/setup-ocaml@v3
     with:
       ocaml-compiler: ocaml-base-compiler.5.4.0~dev
       opam-repositories: |
@@ -134,10 +134,10 @@ To use dependencies specified by [opam lock files](https://opam.ocaml.org/doc/Ma
 ```yml
 steps:
   - name: Checkout tree
-    uses: actions/checkout@v6
+    uses: actions/checkout@v7
 
   - name: Set-up OCaml
-    uses: ocaml/setup-ocaml@v3
+    uses: step-security/setup-ocaml@v3
     with:
       ocaml-compiler: "5.4"
     env:
@@ -163,7 +163,7 @@ strategy:
 
 steps:
   - name: Checkout tree
-    uses: actions/checkout@v6
+    uses: actions/checkout@v7
 
   - name: Retrieve new lists of system packages
     run: apt-get update
@@ -172,7 +172,7 @@ steps:
     run: apt-get --yes install bubblewrap curl darcs gcc git m4 make mercurial patch rsync sudo unzip
 
   - name: Set-up OCaml
-    uses: ocaml/setup-ocaml@v3
+    uses: step-security/setup-ocaml@v3
     with:
       ocaml-compiler: 5
       cache-prefix: v1-${{ matrix.container }}

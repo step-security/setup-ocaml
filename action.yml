@@ -1,6 +1,6 @@
 name: Set up OCaml
 description: Set up an OCaml and opam environment and add to PATH
-author: Anil Madhavapeddy
+author: "step-security"
 branding:
   icon: package
   color: orange

@@ -37,7 +37,7 @@ jobs:
 
     steps:
       - name: Checkout tree
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set-up OCaml
         uses: step-security/setup-ocaml@v3
@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout tree
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Set-up OCaml
         uses: step-security/setup-ocaml@v3
         with:
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout tree
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Set-up OCaml
         uses: step-security/setup-ocaml@v3
         with:
@@ -76,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout tree
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Set-up OCaml
         uses: step-security/setup-ocaml@v3
         with:
@@ -266,12 +266,3 @@ updates:
 ## Roadmap
 
 This action aims to provide an OS-neutral interface to `opam`, and so will not add features that only work on one operating system. It will also track the latest stable release of opam.
-
-## Support
-
-Please feel free to post to the discuss.ocaml.org forum with any questions you have about this action.
-
-Previous discussions include:
-
-- <https://discuss.ocaml.org/t/github-actions-for-ocaml-now-stable-and-on-the-ocaml-org/7889>
-- <https://discuss.ocaml.org/t/github-actions-for-ocaml-opam-now-available/4745>
