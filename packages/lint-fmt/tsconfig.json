@@ -1,0 +1,10 @@
+{
+  "extends": ["@tsconfig/strictest/tsconfig.json", "@tsconfig/node24/tsconfig.json"],
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleDetection": "force",
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "noPropertyAccessFromIndexSignature": false
+  }
+}
