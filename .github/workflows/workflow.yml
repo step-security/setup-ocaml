@@ -11,8 +11,13 @@ jobs:
     name: Hygiene
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Checkout tree
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Set-up Mise
         uses: step-security/mise-action@v4
         with:
@@ -37,8 +42,13 @@ jobs:
           - false
       fail-fast: false
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Checkout tree
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Set-up OCaml 5.4
         uses: ./
         with:
@@ -52,8 +62,13 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     runs-on: macos-latest
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Checkout tree
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Set-up OCaml 5.4
         uses: ./
         with:
@@ -75,8 +90,13 @@ jobs:
           - msys2
       fail-fast: false
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
       - name: Checkout tree
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Set-up OCaml 5.4
         uses: ./
         with:
@@ -94,7 +114,7 @@ jobs:
       image: archlinux:latest
     steps:
       - name: Checkout tree
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Install dependencies
         run: pacman -Sy --noconfirm bash bubblewrap ca-certificates coreutils curl diffutils gcc git gnupg make nano ncurses patch rsync sudo tar unzip xz
       - name: Set-up OCaml
