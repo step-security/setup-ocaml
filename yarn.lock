@@ -421,6 +421,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@ocaml/common@workspace:packages/common":
+  version: 0.0.0-use.local
+  resolution: "@ocaml/common@workspace:packages/common"
+  dependencies:
+    "@actions/core": "npm:^3.0.1"
+    "@tsconfig/node24": "npm:24.0.5"
+    "@tsconfig/strictest": "npm:2.0.8"
+    "@types/node": "npm:24.13.3"
+    axios: "npm:^1.19.0"
+    typescript: "npm:7.0.2"
+  languageName: unknown
+  linkType: soft
+
 "@ocaml/lint-doc@workspace:packages/lint-doc":
   version: 0.0.0-use.local
   resolution: "@ocaml/lint-doc@workspace:packages/lint-doc"
@@ -478,7 +491,6 @@ __metadata:
     "@tsconfig/strictest": "npm:2.0.8"
     "@types/node": "npm:24.13.3"
     "@types/semver": "npm:7.8.0"
-    axios: "npm:1.19.0"
     exponential-backoff: "npm:3.1.3"
     semver: "npm:7.8.5"
     systeminformation: "npm:5.33.1"
@@ -1994,7 +2006,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.19.0":
+"axios@npm:^1.19.0":
   version: 1.19.0
   resolution: "axios@npm:1.19.0"
   dependencies:

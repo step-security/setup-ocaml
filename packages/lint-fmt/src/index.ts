@@ -1,12 +1,14 @@
 import * as path from "node:path";
 import * as process from "node:process";
 import * as core from "@actions/core";
+import { validateSubscription } from "../../common/src/validation.js";
 import { checkFmt } from "./lint.js";
 import { retrieveOcamlformatVersion } from "./ocamlformat.js";
 import { installFormattingDependencies } from "./opam.js";
 
 async function run() {
   try {
+    await validateSubscription();
     const workingDirectory = core.getInput("working-directory");
     const githubWorkspace = process.env.GITHUB_WORKSPACE ?? process.cwd();
     process.chdir(path.resolve(githubWorkspace, workingDirectory));

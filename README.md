@@ -262,7 +262,3 @@ updates:
 
 > [!NOTE]
 > [Renovate](https://github.com/marketplace/renovate) is also available for free as a third-party tool, which is much more flexible than Dependabot - depending on the project and your preferences. If you just want to automate GitHub Actions updates, Dependabot is good enough.
-
-## Roadmap
-
-This action aims to provide an OS-neutral interface to `opam`, and so will not add features that only work on one operating system. It will also track the latest stable release of opam.
