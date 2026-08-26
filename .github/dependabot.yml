@@ -1,0 +1,41 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/analysis
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/common
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/lint-doc
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/lint-fmt
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/lint-opam
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /packages/setup-ocaml
+    schedule:
+      interval: daily
