@@ -1,0 +1,38 @@
+# analysis
+
+## Usage
+
+### Example workflow
+
+```yml
+name: Opam Dependency Submission
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: opam-dependency-submission
+  cancel-in-progress: true
+
+permissions: read-all
+
+jobs:
+  opam-dependency-submission:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tree
+        uses: actions/checkout@v7
+      - name: Set-up OCaml
+        uses: step-security/setup-ocaml@v3
+        with:
+          ocaml-compiler: 5
+      - uses: step-security/setup-ocaml/analysis@v3
+```
+
+## Inputs
+
+Consult the [action.yml](./action.yml) for inputs.

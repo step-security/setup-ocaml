@@ -1,0 +1,104 @@
+name: Builds, tests & co
+
+on:
+  pull_request:
+  push:
+
+permissions: read-all
+
+jobs:
+  hygiene:
+    name: Hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tree
+        uses: actions/checkout@v7
+      - name: Set-up Mise
+        uses: step-security/mise-action@v4
+        with:
+          cache: false
+      - run: yarn install --immutable
+      - if: always()
+        run: yarn lint
+      - if: always()
+        run: yarn typecheck
+      - if: always()
+        name: Ensure dist directory is up-to-date
+        run: yarn build && git diff --exit-code --ignore-cr-at-eol
+
+  ubuntu:
+    name: Ubuntu
+    needs: hygiene
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        allow-prerelease-opam:
+          - true
+          - false
+      fail-fast: false
+    steps:
+      - name: Checkout tree
+        uses: actions/checkout@v7
+      - name: Set-up OCaml 5.4
+        uses: ./
+        with:
+          ocaml-compiler: "5.4"
+          allow-prerelease-opam: ${{ matrix.allow-prerelease-opam }}
+      - run: opam install ssl
+
+  macos:
+    name: macOS
+    needs: hygiene
+    if: github.actor != 'dependabot[bot]'
+    runs-on: macos-latest
+    steps:
+      - name: Checkout tree
+        uses: actions/checkout@v7
+      - name: Set-up OCaml 5.4
+        uses: ./
+        with:
+          ocaml-compiler: "5.4"
+      - run: opam install ssl
+
+  windows:
+    name: Windows
+    needs: hygiene
+    if: github.actor != 'dependabot[bot]'
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        windows-compiler:
+          - mingw
+          - msvc
+        windows-environment:
+          - cygwin
+          - msys2
+      fail-fast: false
+    steps:
+      - name: Checkout tree
+        uses: actions/checkout@v7
+      - name: Set-up OCaml 5.4
+        uses: ./
+        with:
+          ocaml-compiler: "5.4"
+          windows-compiler: ${{ matrix.windows-compiler }}
+          windows-environment: ${{ matrix.windows-environment }}
+      - run: opam install ssl
+        continue-on-error: ${{ matrix.windows-compiler == 'msvc' }}
+
+  container:
+    name: Container
+    needs: hygiene
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:latest
+    steps:
+      - name: Checkout tree
+        uses: actions/checkout@v7
+      - name: Install dependencies
+        run: pacman -Sy --noconfirm bash bubblewrap ca-certificates coreutils curl diffutils gcc git gnupg make nano ncurses patch rsync sudo tar unzip xz
+      - name: Set-up OCaml
+        uses: ./
+        with:
+          ocaml-compiler: "5.4"
+      - run: opam install ssl
