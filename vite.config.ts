@@ -2,13 +2,13 @@ import { defineConfig } from "vite-plus";
 
 export default defineConfig({
   lint: {
-    ignorePatterns: ["**/dist/**"],
+    ignorePatterns: ["**/dist/**", ".github/workflows/**", ".pre-commit-config.yaml"],
     options: {
       typeAware: true,
       typeCheck: true,
     },
   },
   fmt: {
-    ignorePatterns: ["**/dist/**"],
+    ignorePatterns: ["**/dist/**", ".github/workflows/**", ".pre-commit-config.yaml"],
   },
 });
