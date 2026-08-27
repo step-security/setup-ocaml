@@ -6,7 +6,7 @@
     "@actions/core": "^3.0.1",
     "@tsconfig/node24": "24.0.5",
     "@tsconfig/strictest": "2.0.8",
-    "@types/node": "24.13.3",
+    "@types/node": "26.3.0",
     "axios": "^1.19.0",
     "typescript": "7.0.2"
   }
