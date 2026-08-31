@@ -493,7 +493,7 @@ __metadata:
     "@types/semver": "npm:7.8.0"
     exponential-backoff: "npm:3.1.3"
     semver: "npm:7.8.5"
-    systeminformation: "npm:5.33.1"
+    systeminformation: "npm:5.33.5"
     typescript: "npm:7.0.2"
     vite-plus: "npm:0.2.9"
     yaml: "npm:2.9.0"
@@ -3147,12 +3147,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"systeminformation@npm:5.33.1":
-  version: 5.33.1
-  resolution: "systeminformation@npm:5.33.1"
+"systeminformation@npm:5.33.5":
+  version: 5.33.5
+  resolution: "systeminformation@npm:5.33.5"
   bin:
     systeminformation: lib/cli.js
-  checksum: 10c0/7a0a400db03539fa2163033eba8dbb04f3c2c6357b9e8720dd5abef8a20d6a7b85b943b3fe028bbfa0e9d01b8982e658bedb7c5e200eabdf2546beb002872f8e
+  checksum: 10c0/444d02cf89e8d341f91d54e3b6084e62f52aecd16576502fe6c6fd035393f21b26a9354b6360e445f5cd4709bcf432b59ca2c93cf707ed2f54946cac5ea43337
   conditions: (os=darwin | os=linux | os=win32 | os=freebsd | os=openbsd | os=netbsd | os=sunos | os=android)
   languageName: node
   linkType: hard
