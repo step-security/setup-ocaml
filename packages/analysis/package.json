@@ -10,7 +10,7 @@
     "@github/dependency-submission-toolkit": "2.0.5",
     "@tsconfig/node24": "24.0.5",
     "@tsconfig/strictest": "2.0.8",
-    "@types/node": "24.13.3",
+    "@types/node": "26.5.0",
     "packageurl-js": "2.0.1",
     "typescript": "7.0.2",
     "vite-plus": "0.2.9"
