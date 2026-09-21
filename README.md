@@ -149,7 +149,7 @@ steps:
 | `opam-pin`                | No       | Automatically pin local opam packages (matched by `opam-local-packages`) in the opam switch. Set to `false` to skip pinning.                                                                                             | bool   | `true`                                                      |
 | `opam-local-packages`     | No       | A glob pattern matching the local `.opam` files to be pinned when `opam-pin` is enabled. Consult the [`@actions/glob` documentation](https://github.com/actions/toolkit/tree/main/packages/glob) for supported patterns. | string | `*.opam`                                                    |
 | `opam-disable-sandboxing` | No       | Disable the opam sandboxing feature. opam uses Bubblewrap on Linux and sandbox-exec on macOS. Useful for self-hosted runners where the sandbox tool is not available. On Windows, sandboxing is always disabled.         | bool   | `false`                                                     |
-| `dune-cache`              | No       | Enable Dune build caching via GitHub Actions cache. When enabled, the Dune cache directory is saved and restored between workflow runs to speed up incremental builds.                                                   | bool   | `false`                                                     |
+| `cache`                   | No       | Cache the opam root and local switch using GitHub Actions cache. Set to `false` to disable all GitHub Actions cache operations. This does not affect the hosted tool cache.                                              | bool   | `true`                                                      |
 | `windows-compiler`        | No       | The C compiler toolchain used for building on Windows. Use `mingw` (default) for mingw-w64 (GCC), or `msvc` for the Microsoft Visual C compiler. MSVC requires Visual Studio (pre-installed on GitHub-hosted runners).   | string | `mingw`                                                     |
 | `windows-environment`     | No       | The Unix environment used for building on Windows. Use `cygwin` (default) for opam's internal Cygwin, or `msys2` to use the pre-installed MSYS2 on GitHub-hosted runners.                                                | string | `cygwin`                                                    |
 | `allow-prerelease-opam`   | No       | Allow the use of a pre-release version of opam. Has no effect when no pre-release version is available.                                                                                                                  | bool   | `false`                                                     |
@@ -158,13 +158,13 @@ steps:
 
 The `ocaml-compiler` input supports the Semantic Versioning Specification, for more detailed examples please refer to the [documentation](https://github.com/npm/node-semver#ranges).
 
-When a version range is used (e.g., `5`, `5.4.x`), the highest matching version from the opam-repository is always selected.
+When a version range is used (e.g., `5`, `5.5.x`), the highest matching version from the opam-repository is always selected.
 
 > [!WARNING]
 > Version numbers containing a dot **must be quoted** in YAML to avoid being parsed as floats. For example, an unquoted `5.10` is parsed as the float `5.1`, which would silently resolve to the latest `5.1.x` compiler instead of `5.10.x`. To be safe, always quote version values:
 >
 > ```yml
-> ocaml-compiler: "5.4"
+> ocaml-compiler: "5.5"
 > ```
 
 > [!NOTE]
@@ -172,17 +172,22 @@ When a version range is used (e.g., `5`, `5.4.x`), the highest matching version 
 
 Examples:
 
-- Exact package name: `ocaml-base-compiler.5.4.0`
-- Combine multiple packages: `ocaml-variants.5.4.0+options,ocaml-option-flambda,ocaml-option-musl,ocaml-option-static`
+- Exact package name: `ocaml-base-compiler.5.5.0`
+- Combine multiple packages: `ocaml-variants.5.5.0+options,ocaml-option-flambda,ocaml-option-musl,ocaml-option-static`
 - Major versions: `"4"`, `"5"`
-- Minor versions: `"4.08"`, `"4.14"`, `"5.4"`, `"5.4.x"`
-- More specific versions: `"~4.02.2"`, `"5.4.0"`
+- Minor versions: `"4.08"`, `"4.14"`, `"5.5"`, `"5.5.x"`
+- More specific versions: `"~4.02.2"`, `"5.5.0"`
 
 ## Caching
 
 ### opam cache
 
 This action automatically caches the opam root and the local switch (`_opam`) using the GitHub Actions cache. When the cache is hit, the compiler installation is skipped and only `opam update` is run to ensure the repository metadata stays current. This significantly reduces setup time whilst keeping dependency resolution up to date.
+
+Set `cache: false` to disable all GitHub Actions cache operations performed by this action. The hosted tool cache used for the opam executable remains enabled. This can be useful when restoring `_opam` before this action with a custom cache key. If a local switch already exists, the action reuses it instead of creating a new one.
+
+> [!WARNING]
+> Caching a switch after installing project dependencies can consume substantial cache space and may reuse stale or broken packages. If you manage this cache yourself, use an exact compiler version, include the platform, compiler and lock file in the cache key, then run `opam install . --deps-only --locked` after setup. Custom opam caches are used at your own risk; see [#1098](https://github.com/ocaml/setup-ocaml/issues/1098) for the trade-offs and examples.
 
 The cache key is computed from the following components:
 
@@ -205,23 +210,6 @@ On Windows, the following additional components are included:
 This action intentionally does not cache the results of `opam install . --deps-only`. Unlike package managers such as npm or Cargo, opam does not use a lock file by default — dependency versions are resolved against the current state of opam-repository at install time.
 
 If these resolved dependencies were cached, opam-repository updates (bug fixes, security patches, new package versions) would not be picked up for as long as the cache remains valid. On active repositories where CI runs frequently, the cache would be hit continuously and never expire, effectively freezing dependencies indefinitely. This would make CI unreliable, as it could pass with stale dependencies whilst failing on a fresh install.
-
-### Dune cache
-
-Optionally, you can enable Dune's build cache by setting `dune-cache: true`. This caches incremental build artefacts to speed up subsequent builds.
-
-The Dune cache key is scoped to the following components:
-
-- Platform
-- Architecture
-- OCaml compiler version
-- Workflow name
-- Job name
-- Run ID
-
-When restoring, the action falls back to partial key matches, so a cache from a previous run of the same workflow and job can be reused.
-
-To stay within GitHub Actions' 10 GB per-repository cache limit, the action automatically trims the Dune cache by dividing a 5 GB budget equally amongst all the jobs in the workflow run.
 
 ### Clearing the cache
 
@@ -258,7 +246,13 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    groups:
+      ocaml:
+        patterns:
+          - "ocaml/*"
 ```
+
+The `ocaml` group combines updates to GitHub Actions maintained by the OCaml organization into a single pull request.
 
 > [!NOTE]
 > [Renovate](https://github.com/marketplace/renovate) is also available for free as a third-party tool, which is much more flexible than Dependabot - depending on the project and your preferences. If you just want to automate GitHub Actions updates, Dependabot is good enough.

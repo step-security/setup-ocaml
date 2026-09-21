@@ -3,8 +3,12 @@ import * as path from "node:path";
 import * as process from "node:process";
 import * as core from "@actions/core";
 import * as yaml from "yaml";
+import { z } from "zod";
 
 // ── Platform & Architecture ──
+
+const RunnerEnvironment = z.enum(["github-hosted", "self-hosted"]);
+type RunnerEnvironment = z.infer<typeof RunnerEnvironment>;
 
 export const ARCHITECTURE = (() => {
   switch (process.arch) {
@@ -50,19 +54,16 @@ export const PLATFORM = (() => {
   }
 })();
 
-export const RUNNER_ENVIRONMENT = ((): "github-hosted" | "self-hosted" => {
+export const RUNNER_ENVIRONMENT = ((): RunnerEnvironment => {
   const ImageOS = process.env.ImageOS;
-  const RUNNER_ENVIRONMENT = process.env.RUNNER_ENVIRONMENT as
-    | "github-hosted"
-    | "self-hosted"
-    | undefined;
+  const runnerEnvironment = RunnerEnvironment.optional().parse(process.env.RUNNER_ENVIRONMENT);
   if (ImageOS) {
     return "github-hosted";
   }
-  if (!RUNNER_ENVIRONMENT) {
+  if (!runnerEnvironment) {
     return "self-hosted";
   }
-  return RUNNER_ENVIRONMENT;
+  return runnerEnvironment;
 })();
 
 // ── Paths ──
@@ -78,7 +79,7 @@ export const OPAM_ROOT = (() => {
   return path.join(os.homedir(), ".opam");
 })();
 
-export const CYGWIN_ROOT = path.join(OPAM_ROOT, ".cygwin", "root");
+const CYGWIN_ROOT = path.join(OPAM_ROOT, ".cygwin", "root");
 
 export const CYGWIN_ROOT_BIN = path.join(CYGWIN_ROOT, "bin");
 
@@ -97,20 +98,25 @@ export const DUNE_CACHE_ROOT = (() => {
 
 // ── Action Inputs ──
 
+const OpamRepositories = z.record(z.string(), z.string());
+type OpamRepositories = z.infer<typeof OpamRepositories>;
+
+function parseOpamRepositories(input: string): OpamRepositories {
+  const parsed = OpamRepositories.safeParse(yaml.parse(input, { schema: "failsafe" }));
+  if (!parsed.success) {
+    throw new Error("opam-repositories input must be a YAML mapping of name: URL pairs", {
+      cause: parsed.error,
+    });
+  }
+  return parsed.data;
+}
+
 export const OCAML_COMPILER = core.getInput("ocaml-compiler", {
   required: true,
 });
 
-export const OPAM_REPOSITORIES: [string, string][] = (() => {
-  // The failsafe schema treats every scalar as a string, preventing
-  // implicit type coercion (e.g. `true` → boolean, `1.0` → number).
-  const parsed: unknown = yaml.parse(core.getInput("opam-repositories"), {
-    schema: "failsafe",
-  });
-  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-    throw new Error("opam-repositories input must be a YAML mapping of name: URL pairs");
-  }
-  const entries = Object.entries(parsed as Record<string, string>);
+export const OPAM_REPOSITORIES = (() => {
+  const entries = Object.entries(parseOpamRepositories(core.getInput("opam-repositories")));
   if (entries.length === 0) {
     throw new Error("opam-repositories input must not be empty");
   }
@@ -125,7 +131,9 @@ export const OPAM_DISABLE_SANDBOXING =
   // [TODO] unlock this once sandboxing is supported on Windows
   PLATFORM !== "windows" && core.getBooleanInput("opam-disable-sandboxing");
 
-export const DUNE_CACHE = core.getBooleanInput("dune-cache");
+export const OPAM_CACHE = core.getBooleanInput("cache");
+
+export const DUNE_CACHE = OPAM_CACHE && core.getBooleanInput("dune-cache");
 
 export const CACHE_PREFIX = core.getInput("cache-prefix");
 

@@ -8,9 +8,9 @@ inputs:
   ocaml-compiler:
     description: >-
       The OCaml compiler packages to initialise. Accepts a semver version
-      range (e.g. "5.3", "4.14.x") which is resolved to the latest
+      range (e.g. "5.5", "4.14.x") which is resolved to the latest
       matching version from opam-repository, or a full opam package name
-      (e.g. "ocaml-variants.5.3.0+options,ocaml-option-flambda").
+      (e.g. "ocaml-variants.5.5.0+options,ocaml-option-flambda").
     required: true
   opam-repositories:
     description: >-
@@ -43,13 +43,24 @@ inputs:
       sandboxing is always disabled regardless of this setting.
     required: false
     default: "false"
+  cache:
+    description: >-
+      Cache the opam root and local switch using GitHub Actions cache.
+      Set to "false" to disable all GitHub Actions cache operations, including
+      the deprecated Dune cache. This does not affect the hosted tool cache.
+    required: false
+    default: "true"
   dune-cache:
     description: >-
-      Enable Dune build caching via GitHub Actions cache. When enabled,
-      the Dune cache directory is saved and restored between workflow runs
-      to speed up incremental builds.
+      Deprecated. Enable Dune build caching via GitHub Actions cache. This has
+      no effect when "cache" is "false" and will be removed in the next major
+      release.
     required: false
     default: "false"
+    deprecationMessage: >-
+      This input will be removed in v4. The "cache" input takes precedence:
+      "cache: false" disables Dune caching. Manage Dune caching separately
+      after removal.
   cache-prefix:
     description: >-
       The prefix used for all cache keys. Change this value

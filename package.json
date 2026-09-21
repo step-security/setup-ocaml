@@ -1,6 +1,6 @@
 {
   "name": "setup-ocaml",
-  "version": "3.7.2",
+  "version": "3.8.0",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -9,11 +9,13 @@
   "scripts": {
     "build": "vp run --recursive build",
     "fix": "vp check --fix",
+    "knip": "knip && knip --strict",
     "lint": "vp check",
     "typecheck": "vp run --recursive typecheck"
   },
   "devDependencies": {
-    "vite-plus": "0.2.9"
+    "knip": "6.33.0",
+    "vite-plus": "0.3.0"
   },
   "packageManager": "yarn@4.18.0"
 }
