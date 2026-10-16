@@ -19,7 +19,7 @@ jobs:
       - name: Checkout tree
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Set-up Mise
-        uses: step-security/mise-action@v4
+        uses: step-security/mise-action@v5
         with:
           cache: false
       - run: yarn install --immutable
